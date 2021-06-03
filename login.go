@@ -11,14 +11,14 @@ import (
 )
 
 type LoginInfo struct {
-	phone    string
-	password string
+	Phone    string
+	Password string
 }
 
 type User struct {
-	uid  string
-	name string
-	fid  string
+	Uid  string
+	Name string
+	Fid  string
 }
 
 type nameJSON struct {
@@ -29,7 +29,7 @@ type nameJSON struct {
 
 // Login for login chaoxing
 func (li *LoginInfo) Login(c *http.Client, user *User) (ret bool) {
-	loginURL := fmt.Sprintf("https://passport2-api.chaoxing.com/v11/loginregister?code=%s&cx_xxt_passport=json&uname=%s&loginType=1&roleSelect=true", li.password, li.phone)
+	loginURL := fmt.Sprintf("https://passport2-api.chaoxing.com/v11/loginregister?code=%s&cx_xxt_passport=json&uname=%s&loginType=1&roleSelect=true", li.Password, li.Phone)
 	resp, err := c.Get(loginURL)
 	if err != nil {
 		log.Fatal(err)
@@ -71,10 +71,10 @@ func (u *User) GetInfo(c *http.Client, cookies []*http.Cookie) {
 	for _, v := range cookies {
 		switch v.Name {
 		case "fid":
-			u.fid = v.Value
+			u.Fid = v.Value
 		case "_uid":
-			u.uid = v.Value
+			u.Uid = v.Value
 		}
 	}
-	u.name = GetName(c)
+	u.Name = GetName(c)
 }
