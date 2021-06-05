@@ -41,15 +41,26 @@ func (param *CodeSignParam) Scan(fi *os.File) {
 		log.Fatal(err)
 		return
 	}
+	param.ParseToken(qrmatrix.Content)
+}
+
+// Parse Token
+func (param *CodeSignParam) ParseToken(content string) {
 	reg, _ := regexp.Compile(`SIGNIN:aid=(\w*)&source=(\w*)&Code=(\w*)&enc=(\w*)`)
-	sub := reg.FindStringSubmatch(qrmatrix.Content)
+	sub := reg.FindStringSubmatch(content)
 	param.ActiveID = sub[1]
 	param.AppType = sub[2]
 	param.Enc = sub[4]
 }
 
 // DoSign is a function to do qrcode sign
-func (param *CodeSignParam) DoSign(c *http.Client, fi *os.File) {
+func (param *CodeSignParam) DoQRSign(c *http.Client, fi *os.File) {
 	param.Scan(fi)
+	param.Sign(c)
+}
+
+// DoSign is a function to do qrcode sign
+func (param *CodeSignParam) DoQRTokenSign(c *http.Client, token string) {
+	param.ParseToken(token)
 	param.Sign(c)
 }
